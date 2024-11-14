@@ -1,5 +1,5 @@
 import openpyxl
-import pandas as pd
+
 import re
 
 kolumna_dzien = {
@@ -51,8 +51,8 @@ class Zajecia:
 
 
 # Ścieżka do pliku Excel
-plik_excel = 'C:/Users/filip.skup/Desktop/harmonogram.xlsx'
-
+#plik_excel = 'C:/Users/filip.skup/Desktop/harmonogram.xlsx'
+plik_excel = '/Users/filipskup/Desktop/plan_z_xml_do_kalendarza/harmonogram.xlsx'
 # Otwórz plik Excel
 wb = openpyxl.load_workbook(plik_excel)
 
