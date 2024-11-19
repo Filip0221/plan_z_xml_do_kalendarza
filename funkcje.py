@@ -1,4 +1,6 @@
 import re
+import openpyxl
+
 
 kolumna_dzien = {
     'C': 'Poniedziałek',
@@ -65,3 +67,24 @@ def split_and_remove_after_gr13(text):
         return before_gr13, after_gr13
     
     return text, text
+
+def get_time_start(arkusz, row):
+    godziny_cell = arkusz.cell(row=row, column=2) 
+    godzina = godziny_cell.value.strip()
+    if godzina:
+        match = re.search(r'(.*?)(?:-.*)', godzina)
+        return match.group(1).strip()
+    return "brak godzin"
+
+def get_time_end(arkusz, row, column):
+    komorka = arkusz.cell(row, column)
+
+    for merged_range in arkusz.merged_cells.ranges:
+        if komorka.coordinate in merged_range:
+            start_col, start_row, end_col, end_row = merged_range.bounds
+            godziny_cell = arkusz.cell(row = end_row, column=2)
+            godzina = godziny_cell.value.strip()
+            if godzina:
+                match = re.search(r'-(.*)', godzina)
+                return match.group(1).strip()
+            return "brak godzin"

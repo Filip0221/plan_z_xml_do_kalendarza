@@ -1,3 +1,28 @@
+from datetime import datetime
+
+
+
+class Termin:
+    def __init__(self, data_zajec, tydzien, dzien_tygodnia):
+        # Jeżeli data_zajec to tekst 'x' to przypisujemy None
+        if data_zajec == 'x':
+            self.data_zajec = None
+        elif isinstance(data_zajec, str):
+            # Jeżeli data jest tekstem, konwertujemy ją na datetime
+            self.data_zajec = datetime.strptime(data_zajec, "%Y-%m-%d")
+        else:
+            self.data_zajec = data_zajec  # Jeżeli jest to już obiekt datetime
+        self.tydzien = tydzien
+        self.dzien_tygodnia = dzien_tygodnia
+
+    def __str__(self):
+        # Jeżeli data_zajec to None, to nie wyświetlamy daty
+        if self.data_zajec:
+            return f"Zajęcia: {self.data_zajec.strftime('%Y-%m-%d')}, Tydzień: {self.tydzien}, Dzień tygodnia: {self.dzien_tygodnia}"
+        else:
+            return f"Zajęcia: Brak, Tydzień: {self.tydzien}, Dzień tygodnia: {self.dzien_tygodnia}"
+
+
 class Zajecia:
     def __init__(self, dzien, adres, wartosc, tygodnie, czas_rozpoczecia=None, czas_zakonczenia=None):
         self.dzien = dzien
@@ -8,26 +33,20 @@ class Zajecia:
         self.czas_zakonczenia = czas_zakonczenia
 
     def __str__(self):
-        return f"Dzień: {self.dzien}, Adres: {self.adres}, Wartość: {self.wartosc},\n Tygodnie: {self.tygodnie}, Czas rozpoczęcia: {self.czas_rozpoczecia}, Czas zakończenia: {self.czas_zakonczenia}"
+        return f"Dzień: {self.dzien}, Adres: {self.adres}, Wartość: {self.wartosc},\nTygodnie: {self.tygodnie}, Czas rozpoczęcia: {self.czas_rozpoczecia}, Czas zakończenia: {self.czas_zakonczenia}"
 
     def extract_weeks(self, week_range):
         """Funkcja, która przetwarza zakres tygodni"""
         weeks = []
         week_range = week_range.replace(" tydz.", "").replace("tydz.", "")
-        # Rozdzielenie na różne części (np. "1-6", "10", "11")
         parts = week_range.split(',')
         
         for part in parts:
-            # Sprawdzamy, czy część to zakres tygodni (np. 1-6)
             if '-' in part:
                 start, end = part.split('-')
-                # Dodajemy wszystkie tygodnie w tym zakresie do listy
                 weeks.extend(range(int(start), int(end) + 1))
             else:
-                # Jeśli część to pojedynczy tydzień (np. 10)
                 weeks.append(int(part))
         
-        # Usuwamy duplikaty i sortujemy tygodnie
         weeks = sorted(set(weeks))
         return weeks
-
