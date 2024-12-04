@@ -9,10 +9,12 @@ def parse_input_data(input_data):
     for line in lines:
         line = line.strip()
         if line:
-            # Używamy split() bez argumentu, co dzieli po każdej spacji
-            parts = line.split()  
-            if len(parts) > 1:
-                tygodnie.append(parts)
+            parts = line.split()  # podział po spacjach
+            for part in parts:
+                try:
+                    tygodnie.append(int(part))  # konwersja do int i dodanie do listy tygodni
+                except ValueError:
+                    pass  # pomiń wartości, które nie są liczbami
     return tygodnie
 
 # Funkcja do konwersji tekstu na obiekt datetime

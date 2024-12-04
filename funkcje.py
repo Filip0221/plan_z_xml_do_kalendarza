@@ -88,3 +88,30 @@ def get_time_end(arkusz, row, column):
                 match = re.search(r'-(.*)', godzina)
                 return match.group(1).strip()
             return "brak godzin"
+        
+def przeksztalc_tygodnie_na_liczby(tygodnie):
+    # Zamień wszystkie elementy na liczby całkowite, jeśli to możliwe
+    tygodnie_liczby = []
+    for tydzien in tygodnie:
+        try:
+            tygodnie_liczby.append(int(tydzien))
+        except ValueError:
+            # Ignoruj elementy, których nie da się zamienić na liczby całkowite
+            continue
+    return tygodnie_liczby
+
+def extract_weeks_new( week_range):
+        """Funkcja, która przetwarza zakres tygodni"""
+        weeks = []
+        week_range = week_range.replace(" tydz.", "").replace("tydz.", "")
+        parts = week_range.split(',')
+        
+        for part in parts:
+            if '-' in part:
+                start, end = part.split('-')
+                weeks.extend(range(int(start), int(end) + 1))
+            else:
+                weeks.append(int(part))
+        
+        weeks = sorted(set(weeks))
+        return weeks

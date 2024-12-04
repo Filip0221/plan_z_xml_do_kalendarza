@@ -12,7 +12,7 @@ class Termin:
             self.data_zajec = datetime.strptime(data_zajec, "%Y-%m-%d")
         else:
             self.data_zajec = data_zajec  # Jeżeli jest to już obiekt datetime
-        self.tydzien = tydzien
+        self.tydzien = int(tydzien)
         self.dzien_tygodnia = dzien_tygodnia
 
     def __str__(self):
@@ -23,7 +23,7 @@ class Termin:
             return f"Zajęcia: Brak, Tydzień: {self.tydzien}, Dzień tygodnia: {self.dzien_tygodnia}"
 
 
-class Zajecia:
+class Zajecia():
     def __init__(self, dzien, adres, wartosc, tygodnie, czas_rozpoczecia=None, czas_zakonczenia=None):
         self.dzien = dzien
         self.adres = adres
@@ -31,10 +31,9 @@ class Zajecia:
         self.tygodnie = self.extract_weeks(tygodnie)
         self.czas_rozpoczecia = czas_rozpoczecia
         self.czas_zakonczenia = czas_zakonczenia
-
+        self.terminy = []
     def __str__(self):
-        return f"Dzień: {self.dzien}, Adres: {self.adres}, Wartość: {self.wartosc},\nTygodnie: {self.tygodnie}, Czas rozpoczęcia: {self.czas_rozpoczecia}, Czas zakończenia: {self.czas_zakonczenia}"
-
+        return f"\n Dzień: {self.dzien}, Adres: {self.adres}, Wartość: {self.wartosc},\nTygodnie: {self.tygodnie}, Czas rozpoczęcia: {self.czas_rozpoczecia}, Czas zakończenia: {self.czas_zakonczenia}"
     def extract_weeks(self, week_range):
         """Funkcja, która przetwarza zakres tygodni"""
         weeks = []
@@ -50,3 +49,18 @@ class Zajecia:
         
         weeks = sorted(set(weeks))
         return weeks
+    def normalize_dzien_tygodnia(self, dzien):
+        return dzien.strip().capitalize()
+
+    def przypisz_terminy(self, lista_terminow, lista_tygodni, dzien):
+        """Przypisuje zajęcia do terminów na podstawie dostępnych tygodni."""
+        for termin in lista_terminow:
+            print(f"Sprawdzam termin: tydzień {termin.tydzien}, dzień tygodnia: {termin.dzien_tygodnia}")
+            if termin.tydzien in lista_tygodni and self.normalize_dzien_tygodnia(termin.dzien_tygodnia) == self.normalize_dzien_tygodnia(dzien):
+                self.terminy.append(termin)
+
+    def wyswietl_terminy(self):
+        """Wyświetla przypisane terminy zajęć."""
+        if not self.terminy:
+            return "Brak przypisanych terminów."
+        return "\n".join(str(termin) for termin in self.terminy)
